@@ -106,7 +106,7 @@ def g_loop(G, D, g_optimizer, d_optimizer, criterion):
 
             with higher.innerloop_ctx(D, d_optimizer) as (functional_D, diff_D_optimizer):
                 for i in range(config.unrolled_steps):
-                    d_unrolled_loop_higher(G, functional_D, diff_D_optimizer, criterion, d_gen_input=gen_input)
+                    d_unrolled_loop_higher(G, functional_D, diff_D_optimizer, criterion, d_gen_input=None)
 
                 g_optimizer.zero_grad()
                 g_fake_data = G(gen_input)
@@ -158,7 +158,7 @@ def load_config(name):
 if __name__ == '__main__':
 
     argparser = argparse.ArgumentParser()
-    argparser.add_argument('--config', type=str, default='unroll_0')
+    argparser.add_argument('--config', type=str, default='yes_higher_unroll_10')
     args = argparser.parse_args()
 
     config = load_config(args.config)
