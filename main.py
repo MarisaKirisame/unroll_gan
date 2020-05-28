@@ -178,7 +178,9 @@ if __name__ == '__main__':
     print("Save file with prefix", prefix)
 
     G = Generator(input_size=config.g_inp, hidden_size=config.g_hid, output_size=config.g_out).cuda()
+    G._apply(lambda t: t.detach().checkpoint())
     D = Discriminator(input_size=config.d_inp, hidden_size=config.d_hid, output_size=config.d_out).cuda()
+    D._apply(lambda t: t.detach().checkpoint())
     criterion = nn.BCELoss()  # Binary cross entropy: http://pytorch.org/docs/nn.html#bceloss
 
     def binary_cross_entropy(x, y):
@@ -212,4 +214,5 @@ if __name__ == '__main__':
                                title='[{}] Iteration {}'.format(prefix, it), path='{}/samples_{}.png'.format(exp_dir, it))
             print(d_real_loss, d_fake_loss, g_loss)
 
+        raise
     utils.plot_samples(samples, config.log_interval, config.unrolled_steps, path='{}/samples_{}.png'.format(exp_dir, 'final'))
